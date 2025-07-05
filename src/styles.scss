@@ -1,4 +1,17 @@
 @use "tailwindcss";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  > * {
+    @apply font-sans;
+  }
+}
+
+// В целом, в силу небольшого задания можно без ng-deep, прямо сюда вынести
+mat-paginator {
+  @apply rounded;
+
+  .mat-mdc-paginator-range-label, .mat-mdc-paginator-page-size {
+    @apply font-sans;
+  }
+}
+

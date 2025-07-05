@@ -1,0 +1,14 @@
+<div class="bg-[#faf9fd] rounded flex flex-col p-4 rounded items-center w-full">
+  <div class="flex gap-4 sm:gap-0 sm:flex-col items-center mr-auto sm:mr-0">
+    <div class="w-14 h-14 sm:w-20 sm:h-20 relative rounded-full overflow-hidden">
+      <img class="object-cover h-full w-full" [ngSrc]="user.avatar" alt="Фото пользователя" fill priority>
+    </div>
+    <div class="text-left sm:text-center">
+      <div class="text-base"> {{ user.firstName }} {{ user.lastName }} </div>
+      <a class="text-sm hover:underline" href="mailto:{{user.email}}">{{ user.email }}</a>
+    </div>
+  </div>
+  @if (!hideLink) {
+    <a class="bg-slate-500 text-white w-full text-center mt-2 px-2 py-1 rounded" [routerLink]="[user.id]">Открыть</a>
+  }
+</div>
