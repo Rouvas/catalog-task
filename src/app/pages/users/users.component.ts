@@ -1,14 +1,15 @@
-import {ChangeDetectionStrategy, Component, effect, inject, Injectable, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, effect, inject, Injectable, signal} from '@angular/core';
 import {MatPaginatorIntl, MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 import {UsersService} from './services/users.service';
 import {Users} from '../../common/interfaces/user.interface';
 import {UserCardComponent} from './components/user-card/user-card.component';
-import {Subject} from 'rxjs';
+import {Subject, take} from 'rxjs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {SearchPipe} from './pipes/search.pipe';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 // Для локализации взял пример из доки Angular Material
 @Injectable()
@@ -50,6 +51,7 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
 export class UsersComponent {
 
   _users = inject(UsersService);
+  _destroyRef = inject(DestroyRef);
 
   searchControl = new FormControl<string>('');
 
@@ -71,6 +73,10 @@ export class UsersComponent {
   loadUsers(reset = false) {
     this.state.set('loading');
     this._users.getUsers(this.page(), this.perPage())
+      .pipe(
+        take(1),
+        takeUntilDestroyed(this._destroyRef),
+      )
       .subscribe({
         next: usersList => {
           this.users.set(usersList.data);
